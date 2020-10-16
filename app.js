@@ -5,8 +5,8 @@ const https = require('https');
 
 const app = express();
 
-app.listen(3000, function(req, res){
-	console.log("Server is runnning on port 3000");
+app.listen(process.env.PORT || 3000, function(req, res){
+	console.log("Server has started successfully!");
 });
 
 app.use(bodyParser.urlencoded({extended: true}));
