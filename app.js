@@ -9,12 +9,12 @@ app.listen(process.env.PORT || 3000, function(req, res){
 	console.log("Server has started successfully!");
 });
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true})); //allows you to parse POST request to the server
 
-app.use(express.static('public'));
+app.use(express.static('public')); // we put on "public" folder the static files like css and images
 
 app.get('/', function(req, res){
-	res.sendFile(__dirname + "/signup.html");
+	res.sendFile(__dirname + "/signup.html"); // res.sendFile - lets you render a file  
 });
 
 app.post('/', function(req, res){
@@ -23,7 +23,7 @@ app.post('/', function(req, res){
 	let lname = req.body.lname;
 	let email = req.body.email;
 
-	const data = {
+	const data = {  // api data from mailchimp api
 		method: "post",
 		members:[
 			{
@@ -37,20 +37,20 @@ app.post('/', function(req, res){
 		]
 	}
 
-	const jsonData = JSON.stringify(data);
+	const jsonData = JSON.stringify(data); // converted to json
 
-	const url = "https://us10.api.mailchimp.com/3.0/lists/02bdb17fc3";
+	const url = "https://us10.api.mailchimp.com/3.0/lists/02bdb17fc3"; // mailchimp api endpoint or url 
 
-	const options = {
+	const options = { // from the https node module
 		method: "POST",
 		auth: "jaffreyrodriguez42:7db77d17541c433328ed39bd69fe8332-us10"
 	}
 
-	const request = https.request(url, options, function(response){
+	const request = https.request(url, options, function(response){  // the https.request needs to be put on container "request"
 		response.on("data", function(data){
-			const dataObject = JSON.parse(data);
-			console.log(response.statusCode);
-			if(response.statusCode === 200){
+			const dataObject = JSON.parse(data); // converted to javascript object
+			console.log(response.statusCode); 
+			if(response.statusCode === 200){ // if the request is successful
 				res.sendFile(__dirname + "/success.html");
 			}else{
 				res.sendFile(__dirname + "/failure.html");
@@ -58,12 +58,12 @@ app.post('/', function(req, res){
 		})
 	});
 
-	request.write(jsonData);
-	request.end();
+	request.write(jsonData); // data sent to the mailchimp api
+	request.end(); // end the request
 
 });
 
-app.post('/failure', function(req, res){
+app.post('/failure', function(req, res){  
 	res.redirect('/');
 });
 
